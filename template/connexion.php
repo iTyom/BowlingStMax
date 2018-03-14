@@ -63,16 +63,10 @@ if(isset($_POST['connexion'])) { // si le bouton "Connexion" est appuyé
         if(empty($_POST['mdp'])) {
             echo "Le champ Mot de passe est vide.";
         } else {
-            // les champs sont bien posté et pas vide, on sécurise les données entrées par le membre:
             $mail = htmlentities($_POST['mail'], ENT_QUOTES, "ISO-8859-1"); // le htmlentities() passera les guillemets en entités HTML, ce qui empêchera les injections SQL
             $mdp = $_POST['mdp'];
-            // $mdp = htmlentities($_POST['mdp'], ENT_QUOTES, "ISO-8859-1");
 
             $mdp = md5($mdp);
-            // echo $mdp;
-            //on se connecte à la base de données:
-                // on fait maintenant la requête dans la base de données pour rechercher si ces données existe et correspondent:
-                // $req = mysqli_query($mysqli,"SELECT * FROM Tab_User WHERE mail = '".$mail."' AND password = '".$mdp."'");//si vous avez enregistré le mot de passe en md5() il vous suffira de faire la vérification en mettant mdp = '".md5($MotDePasse)."' au lieu de mdp = '".$MotDePasse."'
                 $req = $bdd->prepare("SELECT * FROM Tab_User WHERE mail = :mail AND password = :mdp");
                 $req->execute(array(
                   'mail' => $mail,
@@ -86,7 +80,7 @@ if(isset($_POST['connexion'])) { // si le bouton "Connexion" est appuyé
 
                 if (!$resultat)
                 {
-                    echo 'Mauvais identifiant ou mot de passeOOO !';
+                    echo 'Mauvais identifiant ou mot de passe !';
                 }
                 else
                 {
@@ -94,10 +88,10 @@ if(isset($_POST['connexion'])) { // si le bouton "Connexion" est appuyé
                         session_start();
                         $_SESSION['mail'] = $mail;
                         echo 'Vous êtes connecté !';
-                        header('Location: admin.php'); 
+                        header('Location: admin.php');
                     }
                     else {
-                        echo 'Mauvais identifiant ou mot de passe 111111!';
+                        echo 'Mauvais identifiant ou mot de passe !';
                         echo $mdp;
                         echo '<br/>';
                         echo $isPasswordCorrect;

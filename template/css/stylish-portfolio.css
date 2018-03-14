@@ -113,13 +113,11 @@ h6 {
 }
 
 #containerTxtAccueil {
-  height: 0px;
-  margin-top: 50px;
+  height: 280px;
 }
 
 #containerTxtAccueil p {
   height: 0px;
-  margin-top: 50px;
   font-size: 24px;
 }
 
@@ -128,6 +126,10 @@ h6 {
 
   z-index: 9999999;
   background-image: url("../../images/imgBtn1.png");
+}
+
+.row {
+  justify-content: center;
 }
 
 /* Side Menu */
