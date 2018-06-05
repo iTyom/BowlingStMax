@@ -1,49 +1,42 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
   <head>
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
-      <script type='text/javascript' src="https://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.js"></script>
-      <script src="js/stylish-portfolio.js"></script>
-
-
-    <!-- Custom Fonts -->
-    <!--<link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
-    <link href="vendor/simple-line-icons/css/simple-line-icons.css" rel="stylesheet"> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
     <!-- Custom CSS -->
     <link href="css/stylish-portfolio.css" rel="stylesheet">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-    <script src="../jquery-3.3.1.min.js"></script>
+
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Stylish Portfolio - Start Bootstrap Template</title>
+    <title>Administration</title>
 
 
 
     <?php
 
          try {
-            $bdd = new PDO('mysql:host=localhost;dbname=Bowling;charset=utf8', 'root', 'root');
+            $bdd = new PDO('mysql:host=localhost;dbname=id5237943_bowling2;charset=utf8', 'id5237943_rootroot', 'rootroot');
         }
         catch (Exception $e)
         {
             die('Erreur : ' . $e->getMessage());
         }
     ?>
-    <?php
-
-    ?>
   </head>
 
   <body>
 <?php
-session_start();
+
 if (isset($_SESSION['mail'])){
   ?>
 
@@ -54,11 +47,14 @@ if (isset($_SESSION['mail'])){
       <div id="btnPanelHoraire">
         Voir le panel horaire
       </div>
+      <div id="btnPanelTarif">
+        Voir le panel tarif
+      </div>
         <div id="panelAdmin" style="display: none; width: 300px;">
 
           <h3 style="width:200px">Compte administrateur :</h3>
           <?php
-            $user = $bdd->query("SELECT * FROM Tab_User");
+            $user = $bdd->query("SELECT * FROM user");
 
           ?>
           <table border=2 width=200px color=white >
@@ -66,7 +62,7 @@ if (isset($_SESSION['mail'])){
             <td class="ligne_tab">Compte</td>
           </tr>
           <?php while ($donnees = $user->fetch()) {
-            echo '<tr><td class="ligne_tab">'.$donnees['Prenom_User']; ?> <?php echo $donnees['Nom_User'].'</td><td><a href="deleteUser.php?id='.$donnees['ID_User'].'">Supprimer</a></td></tr>';
+            echo '<tr><td class="ligne_tab">'.$donnees['prenom_user']; ?> <?php echo $donnees['nom_user'].'</td><td><a href="deleteUser.php?id='.$donnees['id_user'].'">Supprimer</a></td></tr>';
           }?>
           </table>
 
@@ -84,7 +80,8 @@ if (isset($_SESSION['mail'])){
         <div id="panelHoraire" style="display: none; width: 300px;">
           <h3 style="width:200px">Modifier les horaires :</h3>
           <?php
-            $horaire = $bdd->query("SELECT * FROM Horaire");
+            $horaire = $bdd->query("SELECT * FROM horaire");
+            $jeux = $bdd->query("SELECT * FROM jeux")
           ?>
           <table border=2 width=200px color=white >
           <tr>
@@ -93,15 +90,67 @@ if (isset($_SESSION['mail'])){
             <td class="ligne_tab">Fermeture</td>
           </tr>
           <?php while ($donnees = $horaire->fetch()) {
-            echo '<tr><td class="ligne_tab">'.$donnees['Libelle_Horaire'].'</td><td>'.$donnees['Horaire_Debut'].'</td><td>'.$donnees['Horaire_Fin'].'</td><td><a href="deleteHoraire.php?id='.$donnees['ID_Horaire'].'">Supprimer</a></td></tr>';
+            echo '<tr><td class="ligne_tab">'.$donnees['libelle_horaire'].'</td><td>'.$donnees['horaire_debut'].'</td><td>'.$donnees['horaire_fin'].'</td><td><a href="deleteHoraire.php?id='.$donnees['id_horaire'].'">Supprimer</a></td></tr>';
           }?>
           </table>
 
           <form action="addHoraire.php" method="POST" style="width:200px;">
-            Libellé horaire: <input type="text" name="libelle" value="" />
+            <!-- Libellé horaire: <input type="text" name="libelle" value="" /> -->
+            <select name="libelle">
+              <option value="semaine">En semaine</option>
+              <option value="samedi">Samedi</option>
+              <option value="dimanche">Dimanche</option>
+              <option value="formuleBL">Formule Bowling & Laser</option>
+            </select>
+            <select name="jeux">
+              <?php while ($donneesJeux = $jeux->fetch()) {
+                echo '<option value="'.$donneesJeux['id_jeux'].'">
+                        '.$donneesJeux['nom_jeux'].'
+                      </option>';
+              }
+              ?>
+            </select><br />
             heure d'ouverture: <input type="text" name="ouverture" value="" />
             heure de fermeture: <input type="text" name="fermeture" value="" />
             <input type="submit" name="addHoraire" value="Ajouter une horaire" />
+          </form>
+        </div>
+        <div id="panelTarif" style="display: none; width: 300px;">
+          <h3 style="width:200px">Modifier les tarif :</h3>
+          <?php
+            $tarif = $bdd->query("SELECT * FROM tarif");
+            $jeux = $bdd->query("SELECT * FROM jeux")
+
+          ?>
+          <table border=2 width=200px color=white >
+          <tr>
+            <td class="ligne_tab">Libellé tarif</td>
+            <td class="ligne_tab">Valeur</td>
+          </tr>
+          <?php while ($donnees = $tarif->fetch()) {
+            echo '<tr><td class="ligne_tab">'.$donnees['libelle_tarif'].'</td><td>'.$donnees['valeur_tarif'].'</td><td><a href="deleteTarif.php?id='.$donnees['id_tarif'].'">Supprimer</a></td></tr>';
+          }?>
+          </table>
+
+          <form action="addTarif.php" method="POST" style="width:200px;">
+            <!-- Libellé horaire: <input type="text" name="libelle" value="" /> -->
+            <select name="libelleTarif">
+              <option value="semaine">En semaine</option>
+              <option value="samedi">Samedi</option>
+              <option value="dimanche">Dimanche</option>
+              <option value="formuleBL">Formule Bowling & Laser</option>
+            </select>
+            <select name="jeuxTarif">
+              <?php while ($donneesJeux = $jeux->fetch()) {
+                echo '<option value="'.$donneesJeux['id_jeux'].'">
+                        '.$donneesJeux['nom_jeux'].'
+                      </option>';
+              }
+              ?>
+            </select>
+            <br />
+            valeur du tarif: <input type="text" name="valeurTarif" value="" />
+            <input type="submit" name="addTarif" value="Ajouter un tarif" />
           </form>
         </div>
     </div>
@@ -111,10 +160,17 @@ if (isset($_SESSION['mail'])){
       $("#btnPanelAdmin").click(function() {
         $("#panelAdmin").css("display", "inline");
         $("#panelHoraire").css("display", "none");
+        $("#panelTarif").css("display", "none");
       });
       $("#btnPanelHoraire").click(function() {
+        $("#panelTarif").css("display", "none");
         $("#panelAdmin").css("display", "none");
         $("#panelHoraire").css("display", "inline");
+      });
+      $("#btnPanelTarif").click(function() {
+        $("#panelHoraire").css("display", "none");
+        $("#panelAdmin").css("display", "none");
+        $("#panelTarif").css("display", "inline");
       });
 
     </script>

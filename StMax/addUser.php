@@ -1,10 +1,6 @@
 <?php
-
-
-
-
   try {
-     $bdd = new PDO('mysql:host=localhost;dbname=Bowling;charset=utf8', 'root', 'root');
+     $bdd = new PDO('mysql:host=localhost;dbname=id5237943_bowling2;charset=utf8', 'id5237943_rootroot', 'rootroot');
   }
   catch (Exception $e)
   {
@@ -18,12 +14,11 @@
     $prenom = $_POST['prenom'];
     $mail = $_POST['mail'];
     $tel = $_POST['tel'];
-    $id = "";
+    $id = null;
     if($mdp == $mdp2)
     {
       $mdp = md5($mdp);
-      //$query = $bdd->query("INSERT INTO Tab_User VALUES('', '$nom', '$prenom', '$mail', $tel, '$mdp')");
-      $req = $bdd->prepare("INSERT INTO Tab_User VALUES(:id, :nom, :prenom, :mail, :tel, :password)");
+      $req = $bdd->prepare("INSERT INTO user (`id_user`, `prenom_user`, `nom_user`, `mail_user`, `tel_user`, `password_user`) VALUES(:id, :prenom, :nom, :mail, :tel, :password)");
       $req->execute(array(
         'id' => $id,
         'nom' => $nom,

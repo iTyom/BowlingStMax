@@ -6,6 +6,6 @@
   {
      die('Erreur : ' . $e->getMessage());
   }
-  $bdd->query("DELETE FROM user WHERE id_user = ".$_GET['id']);
+  $bdd->query("DELETE FROM tarif WHERE id_tarif = ".$_GET['id']);
   header('Location: admin.php');
 ?>

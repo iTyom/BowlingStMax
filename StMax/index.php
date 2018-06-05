@@ -14,6 +14,50 @@
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <script type='text/javascript' src='//code.jquery.com/jquery-1.9.1.js'></script>
 
+    <script type="application/ld+json">
+        {
+          "@context": "http://schema.org",
+          "@type": "Organization",
+          "url": "http://www.example.com",
+          "name": "Unlimited Ball Bearings Corp.",
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+1-401-555-1212",
+            "contactType": "Customer service"
+          },
+          "openingHoursSpecification": [
+              {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": [
+                  "Monday",
+                  "Tuesday",
+                  "Wednesday",
+                  "Thursday",
+                  "Friday"
+                ],
+                "opens": "14:00",
+                "closes": "23:00"
+              },
+              {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": [
+                  "Saturday"
+                ],
+                "opens": "10:00",
+                "closes": "01:00"
+              },
+              {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": [
+                  "Sunday"
+                ],
+                "opens": "14:00",
+                "closes": "22:00"
+              }
+            ]
+        }
+    </script>
+
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-117114717-1"></script>
     <script>
@@ -43,13 +87,34 @@
 
     <?php
          try {
-            $bdd = new PDO('mysql:host=localhost;dbname=id5237943_bowling;charset=utf8', 'id5237943_root', 'rootroot');
+            $bdd = new PDO('mysql:host=localhost;dbname=id5237943_bowling2;charset=utf8', 'id5237943_rootroot', 'rootroot');
         }
         catch (Exception $e)
         {
             die('Erreur : ' . $e->getMessage());
         }
     ?>
+
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css" />
+    <script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
+    <script>
+    window.addEventListener("load", function(){
+    window.cookieconsent.initialise({
+      "palette": {
+        "popup": {
+          "background": "#000"
+        },
+        "button": {
+          "background": "#f1d600"
+        }
+      },
+      "showLink": false,
+      "content": {
+        "message": "Nous utilisons des cookies pour vous offrir la meilleure expérience possible sur notre site web. \nEn continuant à parcourir ce site, vous acceptez l’utilisation des cookies.",
+        "dismiss": "Ok!"
+      }
+    })});
+    </script>
 
   </head>
 
@@ -61,7 +126,7 @@
     <nav id="sidebar-wrapper">
       <ul class="sidebar-nav">
         <li class="sidebar-brand">
-          <a class="js-scroll-trigger" href="#page-top">Start Bootstrap</a>
+          <a class="js-scroll-trigger" href="#page-top">Menu</a>
         </li>
         <li class="sidebar-nav-item">
           <a class="js-scroll-trigger" href="#page-top">Home</a>
@@ -78,6 +143,9 @@
         <li class="sidebar-nav-item">
           <a class="js-scroll-trigger" href="#contact">Plan</a>
         </li>
+        <li class="sidebar-nav-item">
+          <a class="js-scroll-trigger" href="connexion.php">Connexion</a>
+        </li>
       </ul>
     </nav>
 
@@ -93,12 +161,15 @@
             <div class="modal fade" id="myModal" role="dialog" >
               <div class="modal-dialog" >
                 <?php
-                  $reqSemaine = $bdd->query("SELECT * FROM horaire WHERE Libelle_Horaire = 'Semaine'");
-                  $reqVacance = $bdd->query("SELECT * FROM horaire WHERE Libelle_Horaire = 'Semaine Vacances'");
-                  $reqSamedi = $bdd->query("SELECT * FROM horaire WHERE Libelle_Horaire = 'Samedi'");
-                  $reqSamediVacance = $bdd->query("SELECT * FROM horaire WHERE Libelle_Horaire = 'Samedi vacances'");
-                  $reqDimanche = $bdd->query("SELECT * FROM horaire WHERE Libelle_Horaire = 'Dimanche'");
-                  $reqDimancheVacance = $bdd->query("SELECT * FROM horaire WHERE Libelle_Horaire = 'Dimanche vacances'");
+                  $reqSemaine = $bdd->query("SELECT * FROM horaire WHERE libelle_horaire = 'Semaine'");
+                  $reqSamedi = $bdd->query("SELECT * FROM horaire WHERE libelle_horaire = 'Samedi'");
+                  $reqDimanche = $bdd->query("SELECT * FROM horaire WHERE libelle_horaire = 'Dimanche'");
+                  $reqFormuleBL = $bdd->query("SELECT * FROM horaire WHERE libelle_horaire = 'FormuleBL'");
+
+                  $reqTarifSemaine = $bdd->query("SELECT * FROM tarif WHERE libelle_tarif = 'tarifSemaine'");
+                  $reqTarifSamedi = $bdd->query("SELECT * FROM tarif WHERE libelle_tarif = 'tarifSamedi'");
+                  $reqTarifDimanche = $bdd->query("SELECT * FROM tarif WHERE libelle_tarif = 'tarifDimanche'");
+                  $reqTarifFormuleBL = $bdd->query("SELECT * FROM tarif WHERE libelle_tarif = 'tarifFormuleBL'");
                 ?>
                 <!-- Modal content-->
                 <div class="modal-content">
@@ -111,15 +182,15 @@
 
                           <div id="containerTxtAccueil">
                             Le bowling de Saint Maximin dans le Var (83), vous accueille du mardi au dimanche (voir le tableau ci-dessous pour les horaires). Il vous réserve de nombreuses activités variées ainsi que des évènements de folie, comme des karaokés organisés régulièrement.
-                            Vous pouvez suivre les actualités du bowling et de ses environs sur notre page Facebook.<br />
+                            Vous pouvez suivre les actualités du bowling et de ses environs sur notre page Facebook.<br /><br />
                             Venez passer de bon moment en famille ou entre amis au bowling de Saint Maximin. Avec ses 13 pistes informatisées et sa salle de laser game de 250 m2 vous aurez de l'espace pour vous amuser.
-                            Vous y trouverez aussi des jeux d'arcades, un babyfoot, un panier de basket, un air hockey, ainsi que des 3 billards.<br />
+                            Vous y trouverez aussi des jeux d'arcades, un babyfoot, un panier de basket, un air hockey, ainsi que des 3 billards.<br /><br />
                             Nous vous proposons différentes formules, accessibles par les plus petits comme par les plus grands. Nous vous proposons une formule anniversaire, ou vous choisissez l'activité que vous préférez.
-                            Ensuite, nous trouverez, une formule Pizza/ Bowling.<br />
+                            Ensuite, nous trouverez, une formule Pizza/ Bowling.<br /><br />
                             Si vous en avez marre de faire ridiculiser par vos amis, ne vous inquiétez pas nous avons la solution à votre problème.<br />
                             Nous vous proposons de prendre des cours de bowling avec le club de bowling Saint maximinois qui se réunit le mardi soir, le samedi et le dimanche matin pour les entrainements. La licence est à l'année. De plus, il organise régulièrement des mini tournois.
-                            Pour plus de renseignements se rapprocher du gérant du bowling et de l'association.<br />
-                            Si le bowling n'est vraiment pas fait pour vous, alors vous pouvez vous tourner vers le laser Blast. <br />
+                            Pour plus de renseignements se rapprocher du gérant du bowling et de l'association.<br /><br />
+                            Si le bowling n'est vraiment pas fait pour vous, alors vous pouvez vous tourner vers le laser Blast. <br /><br />
                             Prochainement, le bowling de saint Maximin va se diversifier et vous proposer un nouvel univers de jeux en réalité virtuel. Venez bientôt essayer une expérience incroyable avec 100 m2 de plateau pour rendre votre expérience encore plus réaliste.
                             N'hésitez pas après votre visite à nous laisser un petit commentaire sur notre page Facebook !!
 
@@ -143,36 +214,40 @@
       <div class="overlay"></div>
     </header>
 
-    <!-- About -->
-    <section class="content-section bg-light" id="about">
-      <div class="container text-center">
-        <p>
+
+    <section class="content-section bg-light" id="about.">
+      <div class="container">
+
+        <p class="textHoraire">Du mardi au vendredi</p>
+          <?php while ($donnees = $reqSemaine->fetch()) { echo $donnees['horaire_debut']; ?>h - <?php echo $donnees['horaire_fin'];}?>h
+          -
+          <?php while($donneesTarifSemaine = $reqTarifSemaine->fetch()) { echo $donneesTarifSemaine['valeur_tarif']; }?>€
+          <br /><br /><br />
+
+          <p class="textHoraire">Samedi</p>
+          <?php while($donneesSamedi = $reqSamedi->fetch()) { echo $donneesSamedi['horaire_debut']; ?>h - <?php echo $donneesSamedi['horaire_fin'];}?>h
+          -
+          <?php while($donneesTarifSamedi = $reqTarifSamedi->fetch()) { echo $donneesTarifSamedi['valeur_tarif']; }?>€
+          <br /><br /><br />
+
+          <p class="textHoraire">Dimanche et jours fériés</p>
+          <?php while($donneesSamediVacance = $reqDimanche->fetch()) { echo $donneesSamediVacance['horaire_debut']; ?>h - <?php echo $donneesSamediVacance['horaire_fin'];}?>h
+          -
+          <?php while($donneesTarifDimanche = $reqTarifDimanche->fetch()) { echo $donneesTarifDimanche['valeur_tarif']; }?>€
+          <br /><br /><br />
+
+          <p class="textHoraire">Formule Bowling & Laser Blast</p>
+          <?php while($donneesFormuleBL = $reqFormuleBL->fetch()) { echo $donneesFormuleBL['horaire_debut']; ?>h - <?php echo $donneesFormuleBL['horaire_fin'];}?>h
+          -
+          <?php while($donneesTarifFormuleBL = $reqTarifFormuleBL->fetch()) { echo $donneesTarifFormuleBL['valeur_tarif']; }?>€
+          <br /><br /><br />
+
+        </p>
+        <p id="textLocation">
           Location de chaussure : Ajoutez 2€ sur la première partie - Port de chaussure obligatoire
         </p>
-        <table border= 2 width=100% color=white style="margin-top: 50px;">
-          <th>
-            <td class="ligne_tab">Toute l'année</td>
-            <td class="ligne_tab">Vacances scolaires</td>
-          </th>
-          <tr height=25>
-            <td class="ligne_tab">Du mardi au vendredi</td>
-            <td class="ligne_tab"><?php while ($donnees = $reqSemaine->fetch()) { echo $donnees['Horaire_Debut']; ?>h - <?php echo $donnees['Horaire_Fin'];}?>h</td>
-            <td class="ligne_tab"><?php while($donneesVacance = $reqVacance->fetch()) { echo $donneesVacance['Horaire_Debut'];?>h - <?php echo $donneesVacance['Horaire_Fin'];}?>h</td>
-          </tr>
-          <tr height=25>
-            <td class="ligne_tab">Samedi</td>
-            <td class="ligne_tab"><?php while($donneesSamedi = $reqSamedi->fetch()) { echo $donneesSamedi['Horaire_Debut']; ?>h - <?php echo $donneesSamedi['Horaire_Fin'];}?>h</td>
-            <td class="ligne_tab"><?php while($donneesSamediVacance = $reqSamediVacance->fetch()) { echo $donneesSamediVacance['Horaire_Debut']; ?>h - <?php echo $donneesSamediVacance['Horaire_Fin'];}?>h</td>
-          </tr>
-          <tr height=25>
-            <td class="ligne_tab">Dimanche</td>
-            <td class="ligne_tab"><?php while($donneesDimanche = $reqDimanche->fetch()) { echo $donneesDimanche['Horaire_Debut']; ?>h - <?php echo $donneesDimanche['Horaire_Fin'];}?>h</td>
-            <td class="ligne_tab"><?php while($donneesDimancheVacance = $reqDimancheVacance->fetch()) { echo $donneesDimancheVacance['Horaire_Debut']; ?>h - <?php echo $donneesDimancheVacance['Horaire_Fin'];}?>h</td>
-          </tr>
-        </table>
     </div>
     </section>
-
     <!-- Services -->
 
     <!-- Callout -->
@@ -325,22 +400,22 @@
                     <div class="modal-body">
                       <p  class="txtFormule">
                         4 personnes au minimum<br/>
-                        (Réservation au préalable par téléphone)<br/>
+                        (Réservation au préalable par téléphone)<br/><br/>
 
                         Vôtre table est réservée<br/>
                         Pizza (1/2 par pers.)<br/>
                         Vin rosé (pour les adultes), 1 bouteille pour 4 personnes<br/>
-                        Jus d'orange ou Soda (pour les ados) <br/>
+                        Jus d'orange ou Soda (pour les ados) <br/><br/>
 
                         (L'abus d'alcool est dangereux pour la santé, à consommer avec modération<br/>
-                        Celui qui conduit, c'est celui qui ne boit pas)<br/>
+                        Celui qui conduit, c'est celui qui ne boit pas)<br/><br/>
 
                         Formule PIZZA à 16€<br/>
-                        1 Partie au choix : BOWLING ou LASER BLAST<br/>
+                        1 Partie au choix : BOWLING ou LASER BLAST<br/><br/>
                         Formule PIZZA à 22€<br/>
-                        2 Parties au choix : BOWLING et/ou LASER BLAST<br/>
+                        2 Parties au choix : BOWLING et/ou LASER BLAST<br/><br/>
                         Formule PIZZA à 31€<br/>
-                        3 Parties au choix : BOWLING et/ou LASER BLAST<br/>
+                        3 Parties au choix : BOWLING et/ou LASER BLAST<br/><br/>
 
                       </p>
                     </div>
@@ -365,17 +440,17 @@
                     </div>
                       <div class="modal-body">
                         <p class="txtFormule">
-                          Formule anniversaire à 15€<br/>
+                          Formule anniversaire à 15€<br/><br/>
                           Vous avez le choix entre :<br/>
                           - 2 parties de Bowling<br/>
                           - 2 parties de Laser Blast<br/>
-                          - 1 partie de Bowling et 1 partie de Laser Blast<br/>
+                          - 1 partie de Bowling et 1 partie de Laser Blast<br/><br/>
                           A votre arrivée, votre table est réservée et préparée.<br/>
-                          Les enfants sont enregistrés immédiatement pour la partie de jeu dont la durée est variable selon la formule choisie.<br/>
-                          Pour profiter pleinement de votre créneau, vous devez vous présenter à l'heure précise de votre réservation.<br/>
-                          Les enfants des anniversaires participants au Laser Blast seront mixés avec d'autres enfants.<br/>
+                          Les enfants sont enregistrés immédiatement pour la partie de jeu dont la durée est variable selon la formule choisie.<br/><br/>
+                          Pour profiter pleinement de votre créneau, vous devez vous présenter à l'heure précise de votre réservation.<br/><br/>
+                          Les enfants des anniversaires participants au Laser Blast seront mixés avec d'autres enfants.<br/><br/>
                           Le tarif de la privatisation de Laser est de 20€ par enfants au lieu de 15€.<br/>
-                          Le Bowling Laser Blast de Saint Maximin agence des créneaux horaires pour garantir votre table pour une durée maximale de 2 heures. Si une réservation fait suite à la vôtre, vous devez libérer votre table dans les délais impartis et ceci par correction pour l'anniversaire suivant. Nous vous remercions pour votre compréhension.<br/>
+                          Le Bowling Laser Blast de Saint Maximin agence des créneaux horaires pour garantir votre table pour une durée maximale de 2 heures. Si une réservation fait suite à la vôtre, vous devez libérer votre table dans les délais impartis et ceci par correction pour l'anniversaire suivant. Nous vous remercions pour votre compréhension.<br/><br/>
                           6 enfants minimum, 1,5l de sodas et 1l de jus de fruits.<br/>
                           Un anniversaire inoubliable pour le plaisir de tous.<br/>
 
@@ -405,12 +480,12 @@
                   </div>
                     <div class="modal-body">
                       <p class="txtFormule">
-                        Vous pouvez effectuer vos soirées entreprise dans notre établissement, en choisissant une formule "sur mesure" (Soirée de fin d'année, Arbre de noël, Séminaire, ...).
+                        Vous pouvez effectuer vos soirées entreprise dans notre établissement, en choisissant une formule "sur mesure" (Soirée de fin d'année, Arbre de noël, Séminaire, ...).<br/><br/>
                         Vous souhaitez rassembler vos collaborateurs :<br/>
                         - Pour une journée de travail<br/>
                         - Une opération événementielle<br/>
                         - Un lancement de produit<br/>
-                        - Une réunion commerciale<br/>
+                        - Une réunion commerciale<br/><br/>
                         Contactez-nous au plus vite et définissons ensemble la formule "all-inclusive" pour un moment exceptionnel qui vous conviendra le mieux.<br/>
 
                       </p>
@@ -488,18 +563,8 @@
       <div class="container">
         <ul class="list-inline mb-5">
           <li class="list-inline-item">
-            <a class="social-link rounded-circle text-white mr-3" href="#">
+            <a class="social-link rounded-circle text-white mr-3" href="https://www.facebook.com/bowlinglaserstmax/">
               <i class="icon-social-facebook"></i>
-            </a>
-          </li>
-          <li class="list-inline-item">
-            <a class="social-link rounded-circle text-white mr-3" href="#">
-              <i class="icon-social-twitter"></i>
-            </a>
-          </li>
-          <li class="list-inline-item">
-            <a class="social-link rounded-circle text-white" href="#">
-              <i class="icon-social-github"></i>
             </a>
           </li>
         </ul>

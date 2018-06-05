@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,7 +11,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Stylish Portfolio - Start Bootstrap Template</title>
+    <title>Connexion</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -31,7 +34,7 @@
 
     <?php
          try {
-            $bdd = new PDO('mysql:host=localhost;dbname=Bowling;charset=utf8', 'root', 'root');
+            $bdd = new PDO('mysql:host=localhost;dbname=id5237943_bowling2;charset=utf8', 'id5237943_rootroot', 'rootroot');
         }
         catch (Exception $e)
         {
@@ -67,16 +70,15 @@ if(isset($_POST['connexion'])) { // si le bouton "Connexion" est appuyé
             $mdp = $_POST['mdp'];
 
             $mdp = md5($mdp);
-                $req = $bdd->prepare("SELECT * FROM Tab_User WHERE mail = :mail AND password = :mdp");
+                $req = $bdd->prepare("SELECT * FROM user WHERE mail_user = :mail AND password_user = :mdp");
                 $req->execute(array(
                   'mail' => $mail,
                   'mdp' => $mdp
                 ));
                 $resultat = $req->fetch();
-                // echo $resultat['password'];
 
 
-                $isPasswordCorrect = password_verify($mdp, $resultat['password']);
+                $isPasswordCorrect = password_verify($mdp, $resultat['password_user']);
 
                 if (!$resultat)
                 {
@@ -84,23 +86,19 @@ if(isset($_POST['connexion'])) { // si le bouton "Connexion" est appuyé
                 }
                 else
                 {
-                    if ($mdp == $resultat['password']) {
-                        session_start();
+                    if ($mdp == $resultat['password_user']) {
                         $_SESSION['mail'] = $mail;
-                        echo 'Vous êtes connecté !';
-                        header('Location: admin.php');
+                        //header('Location: /admin.php');
+                        echo "<script type='text/javascript'>document.location.replace('admin.php');</script>";
+
                     }
                     else {
                         echo 'Mauvais identifiant ou mot de passe !';
-                        echo $mdp;
-                        echo '<br/>';
-                        echo $isPasswordCorrect;
                     }
                 }
             }
         }
     }
-
 ?>
   </body>
 </html>
